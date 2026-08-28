@@ -1,0 +1,85 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FlexiLoans LOS</title><style>
+body{font-family:Arial;margin:0;background:#f4f6f8;color:#172033}.wrap{max-width:1180px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.kpi{font-size:25px;font-weight:bold}.flow{display:flex;gap:5px;overflow:auto}.node{padding:12px;border:1px solid #dbe2ea;border-radius:8px;min-width:100px;text-align:center;font-size:12px}.row{display:flex;gap:10px;flex-wrap:wrap}.field{flex:1;min-width:180px}label{font-size:12px;font-weight:bold;display:block;margin:8px 0 4px}input,select{width:100%;padding:9px;box-sizing:border-box;border:1px solid #ccd2d9;border-radius:7px}button{padding:9px 13px;border:0;border-radius:7px;font-weight:bold;cursor:pointer}.primary{background:#2563eb;color:white}.secondary{background:#e5e7eb}.muted{color:#6b7280;font-size:12px}.badge{display:inline-block;background:#e0edff;color:#1d4ed8;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:bold}.success{background:#dcfce7;color:#166534}.warn{background:#fef3c7;color:#92400e}table{width:100%;border-collapse:collapse}td,th{padding:9px;border-bottom:1px solid #eee;text-align:left;font-size:12px}.log{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;font:12px monospace;white-space:pre-wrap}.hidden{display:none}.notice{padding:10px;background:#eff6ff;color:#1e40af;border-radius:8px;font-size:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style></head><body><div class="wrap"><div class="top"><div><h1>FlexiLoans LOS</h1><div class="muted">Technical BA portfolio application</div></div><span class="badge">Educational / Mock integrations</span></div>
+<div class="card"><h2>1. Create Application</h2><div class="row"><div class="field"><label>Name</label><input id="name" value="Rahul Sharma"></div><div class="field"><label>PAN</label><input id="pan" value="ABCDE1234F"></div><div class="field"><label>Employment</label><select id="emp"><option>Salaried</option><option>Self-employed</option></select></div></div><div class="row"><div class="field"><label>Monthly Income</label><input id="income" type="number" value="50000"></div><div class="field"><label>Requested Amount</label><input id="amount" type="number" value="250000"></div><div class="field"><label>Tenure</label><input id="tenure" type="number" value="36"></div></div><button class="primary" style="margin-top:12px" onclick="createApp()">Create Application</button>
+<div class="card"><h2>2. Application</h2><div id="appInfo" class="notice">Create an application to begin.</div><div id="actions" class="hidden" style="margin-top:12px"><button class="secondary" onclick="act('kyc')">Run KYC</button> <button class="secondary" onclick="act('credit')">Run CIBIL</button> <button class="secondary" onclick="act('decision')">Run BRE</button> <button class="secondary" onclick="act('documents')">Generate Documents</button> <button class="secondary" onclick="act('esign')">E-Sign</button> <button class="secondary" onclick="act('mandate')">E-Mandate</button> <button class="primary" onclick="act('disburse')">Disburse</button></div></div>
+<div class="grid"><div class="card"><h2>3. Audit Trail</h2><div id="audit" class="log">No application selected.</div></div><div class="card"><h2>4. Integrations</h2><div id="integrations" class="log">No integration events.</div><button class="secondary" onclick="failCibil()" style="margin-top:8px">Simulate CIBIL Timeout</button></div><div class="card"><h2>5. BA Interview View</h2><div class="notice">
+    <b>Business Requirement</b>
+    <p>Enable a fully digital personal-loan journey from application creation through disbursement.</p>
+
+    <b>Process</b>
+    <p>Application → KYC → Credit Bureau → Fraud/PEP → BRE Decision → Documents → E-Sign → E-Mandate → Disbursement</p>
+
+    <b>Business Rules</b>
+    <p>
+      • KYC must be verified before credit processing.<br>
+      • Credit score must meet the configured eligibility threshold.<br>
+      • Fraud/PEP checks must return clear status.<br>
+      • Documents, E-Sign and E-Mandate must be completed before disbursement.
+    </p>
+
+    <b>API / Integration Mapping</b>
+    <p>
+      KYC API → Identity verification<br>
+      CIBIL API → Credit score<br>
+      Fraud/PEP API → Risk screening<br>
+      BRE → Eligibility decision<br>
+      E-Sign API → Digital agreement<br>
+      E-Mandate API → Repayment mandate<br>
+      Disbursement API → Loan payout
+    </p>
+
+    <b>Exception Handling</b>
+    <p>
+      Example: CIBIL timeout → preserve application state → record integration failure →
+      mark retryable → retry integration → continue processing after successful response.
+    </p>
+
+    <b>UAT Scenario</b>
+    <p>
+      Given a valid applicant with successful KYC, CIBIL and fraud checks,
+      when the BRE evaluates the application,
+      then an eligible application should proceed to approval and subsequent fulfilment stages.
+    </p>
+
+    <b>Audit / Traceability</b>
+    <p>
+      Every major status transition and integration event is recorded with timestamp,
+      previous status, new status and processing details.
+    </p>
+  </div>
+</div>
+<div class="card"><h2>6. Application Lifecycle</h2><div id="lifecycle" class="row"></div>
+</div>
+<script>
+let id=null;async function api(url,opt={}){let r=await fetch(url,{headers:{'Content-Type':'application/json'},...opt});let d=await r.json();if(!r.ok)throw new Error(d.detail||'Request failed');return d}
+async function createApp(){try{let d=await api('/api/applications',{method:'POST',body:JSON.stringify({name:val('name'),pan:val('pan'),employment_type:val('emp'),income:+val('income'),requested_amount:+val('amount'),tenure_months:+val('tenure')})});id=d.id;render(d);await refresh()}catch(e){alert(e.message)}}
+function val(x){return document.getElementById(x).value}function render(d){
+  document.getElementById('appInfo').innerHTML =
+    `<b>${d.application_no}</b> — ${d.name}<br>
+     Status: <span class="badge">${d.status}</span><br>
+     Amount: ₹${Number(d.requested_amount).toLocaleString()}`;
+
+  document.getElementById('actions').classList.remove('hidden');
+
+  const stages = [
+    'SUBMITTED',
+    'KYC_VERIFIED',
+    'CREDIT_COMPLETED',
+    'APPROVED',
+    'DOCUMENTS_COMPLETED',
+    'MANDATE_COMPLETED',
+    'DISBURSED'
+  ];
+
+  document.getElementById('lifecycle').innerHTML =
+    stages.map(stage =>
+      `<div class="node ${stage === d.status ? 'success' : ''}">
+        ${stage}
+      </div>`
+    ).join('');
+}
+async function act(name){try{let url={'kyc':'kyc','credit':'credit','decision':'decision','documents':'documents','esign':'esign','mandate':'mandate','disburse':'disburse'}[name];let d=await api(`/api/applications/${id}/${url}`,{method:'POST'});if(d.status){let app=await api(`/api/applications/${id}`);render(app);await refresh()}}catch(e){alert(e.message)}}
+async function refresh(){if(!id)return;let a=await api(`/api/applications/${id}/audit`);document.getElementById('audit').textContent=a.map(x=>`${x.created_at} | ${x.event_type} | ${x.old_status||'-'} -> ${x.new_status||'-'} | ${x.details}`).join('\n')||'No audit events';let i=await api(`/api/applications/${id}/integrations`);document.getElementById('integrations').textContent=i.map(x=>`${x.created_at} | ${x.integration} | ${x.status} | ${x.response}`).join('\n')||'No integration events'}
+async function failCibil(){if(!id){alert('Create an application first');return}try{let d=await api('/api/simulate-failure',{method:'POST',body:JSON.stringify({integration:'CIBIL',application_id:id})});alert(d.integration+' '+d.status+' — '+d.recommended_action);refresh()}catch(e){alert(e.message)}}
+</script></body></html>
