@@ -1559,25 +1559,69 @@ Actual provider APIs, API contracts, credentials, SLAs, security controls, regul
 
 ## 35. Application Screenshots
 
-Screenshots of the working application can be added here to demonstrate the user journey.
+The following UI mockups demonstrate the key screens and operational capabilities of the FlexiLoans LOS portfolio application.
 
-### Application Creation
+### 1. Dashboard
 
-![Application Creation](screenshots/application.png)
+Provides an overview of applications, pipeline stages, recent applications and integration status.
 
-### Loan Processing
+![FlexiLoans LOS Dashboard](screenshots/01-dashboard.png)
 
-![Loan Processing](screenshots/loan-processing.png)
+### 2. Create Application
 
-### Audit Trail
+Captures customer and loan information required to initiate a personal-loan application.
 
-![Audit Trail](screenshots/audit-trail.png)
+![Create Loan Application](screenshots/02-create-application.png)
 
-### API / Integration View
+### 3. Application Journey
 
-![API Integration](screenshots/integrations.png)
+Provides visibility into the end-to-end loan application lifecycle.
 
-> Screenshots will be added as the application is finalized for portfolio presentation.
+![Application Journey](screenshots/03-application-journey.png)
+
+### 4. API Integrations
+
+Provides visibility into external integrations such as KYC, CIBIL, BRE, E-Sign, E-Mandate and Disbursement.
+
+![API Integrations](screenshots/04-integrations.png)
+
+### 5. Audit Trail
+
+Provides end-to-end traceability of application events and status transitions.
+
+![Audit Trail](screenshots/05-audit-trail.png)
+
+### 6. CIBIL Retry / Reprocess
+
+Demonstrates exception handling when an external CIBIL API experiences a timeout.
+
+![CIBIL Retry and Reprocess](screenshots/06-cibil-retry.png)
+
+### 7. Document Generation
+
+Displays loan documents generated after approval.
+
+![Generated Documents](screenshots/07-documents.png)
+
+### 8. E-Sign
+
+Displays the digital-signature status of loan documents.
+
+![E-Sign](screenshots/08-e-sign.png)
+
+### 9. E-Mandate
+
+Displays the repayment mandate registration and status.
+
+![E-Mandate](screenshots/09-e-mandate.png)
+
+### 10. Disbursement
+
+Displays the final loan-disbursement status and transaction reference.
+
+![Loan Disbursement](screenshots/10-disbursement.png)
+
+> **Note:** These are portfolio UI mockups created to demonstrate the functional workflow and Business Analyst requirements of the LOS. They are not screenshots of a production/client system.
 
 ---
 
